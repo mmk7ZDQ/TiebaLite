@@ -26,15 +26,18 @@ jobs:
 
       - name: Decode Keystore
         id: decode_keystore
-        if: ${{ startsWith(github.ref, 'refs/tags/') && secrets.KEYSTORE != '' }}
-        uses: timheuer/base64-to-file@v2
-        with:
-          fileName: ${{ vars.RELEASE_KEYSTORE }}
-          fileDir: ${{ github.workspace }}
-          encodedString: ${{ secrets.KEYSTORE }}
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE }}
+          KEYSTORE_FILE: ${{ vars.RELEASE_KEYSTORE }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ] && [ -n "$KEYSTORE_FILE" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$KEYSTORE_FILE"
+          fi
 
       - name: Generate keystore.properties
-        if: ${{ startsWith(github.ref, 'refs/tags/') && secrets.KEYSTORE != '' }}
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           if [ -n "${{ secrets.RELEASEKEYPASSWORD }}" ]; then
             echo keystore.file="${{ vars.RELEASE_KEYSTORE }}" >> keystore.properties
