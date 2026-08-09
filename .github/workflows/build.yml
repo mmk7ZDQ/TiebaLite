@@ -55,7 +55,7 @@ jobs:
       - name: Read Output Metadata
         id: read_output_metadata
         shell: bash
-        run: echo "content=$(cat ./app/build/outputs/apk/release/output-metadata.json)" >> "$GITHUB_OUTPUT"
+        run: echo "content=$(tr -d '\n' < ./app/build/outputs/apk/release/output-metadata.json)" >> "$GITHUB_OUTPUT"
 
       - name: Upload Release Package
         env:
