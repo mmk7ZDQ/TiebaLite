@@ -27,7 +27,7 @@ import com.github.panpf.sketch.fetch.newResourceUri
 import com.github.panpf.sketch.request.LoadRequest
 import com.github.panpf.sketch.request.LoadResult
 import com.github.panpf.sketch.request.execute
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import com.huanchengfly.tieba.post.ui.common.rememberDrawablePainter
 import com.huanchengfly.tieba.post.App
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.fromJson

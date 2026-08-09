@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.github.panpf.sketch.compose.AsyncImage
 import com.github.panpf.sketch.fetch.newResourceUri
 import com.github.panpf.sketch.request.DisplayRequest
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
+import com.huanchengfly.tieba.post.ui.common.rememberDrawablePainter
 import com.eygraber.compose.placeholder.PlaceholderHighlight
 import com.eygraber.compose.placeholder.material.fade
 import com.eygraber.compose.placeholder.material.placeholder

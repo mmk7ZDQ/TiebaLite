@@ -171,7 +171,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.androidx.hilt.compiler)
 
-    implementation(libs.accompanist.drawablepainter)
 
     // Replaced deprecated Accompanist modules with official/third-party alternatives
     implementation(libs.eygraber.placeholder.material)
