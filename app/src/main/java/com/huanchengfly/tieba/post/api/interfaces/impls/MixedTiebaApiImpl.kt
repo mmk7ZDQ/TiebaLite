@@ -16,7 +16,6 @@ import com.huanchengfly.tieba.post.api.buildProtobufRequestBody
 import com.huanchengfly.tieba.post.api.getScreenHeight
 import com.huanchengfly.tieba.post.api.getScreenWidth
 import com.huanchengfly.tieba.post.api.interfaces.ITiebaApi
-import com.huanchengfly.tieba.post.api.models.AddThreadBean
 import com.huanchengfly.tieba.post.api.models.AgreeBean
 import com.huanchengfly.tieba.post.api.models.CheckReportBean
 import com.huanchengfly.tieba.post.api.models.CollectDataBean
@@ -60,6 +59,9 @@ import com.huanchengfly.tieba.post.api.models.protos.addPost.AddPostResponse
 import com.huanchengfly.tieba.post.api.models.protos.addPollPost.AddPollPostReponse
 import com.huanchengfly.tieba.post.api.models.protos.addPollPost.AddPollPostRequest
 import com.huanchengfly.tieba.post.api.models.protos.addPollPost.AddPollPostRequestDate
+import com.huanchengfly.tieba.post.api.models.protos.addThread.AddThreadRequest
+import com.huanchengfly.tieba.post.api.models.protos.addThread.AddThreadRequestData
+import com.huanchengfly.tieba.post.api.models.protos.addThread.AddThreadResponse
 import com.huanchengfly.tieba.post.api.models.protos.forumGuide.ForumGuideRequest
 import com.huanchengfly.tieba.post.api.models.protos.forumGuide.ForumGuideRequestData
 import com.huanchengfly.tieba.post.api.models.protos.forumGuide.ForumGuideResponse
@@ -152,6 +154,7 @@ import java.io.IOException
 import java.net.URLEncoder
 
 object MixedTiebaApiImpl : ITiebaApi {
+
     override fun personalized(loadType: Int, page: Int): Call<PersonalizedBean> =
         RetrofitTiebaApi.MINI_TIEBA_API.personalized(loadType, page)
 
@@ -1416,11 +1419,11 @@ object MixedTiebaApiImpl : ITiebaApi {
         page: Int,
         subPostId: Long
     ): Flow<PbFloorResponse> {
-        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V12_API.pbFloorFlow(
+        return RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_V22_API.pbFloorFlow(
             buildProtobufRequestBody(
                 PbFloorRequest(
                     PbFloorRequestData(
-                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V12),
+                        common = buildCommonRequest(clientVersion = ClientVersion.TIEBA_V22),
                         forum_id = forumId,
                         kz = threadId,
                         pid = postId,
@@ -1433,7 +1436,7 @@ object MixedTiebaApiImpl : ITiebaApi {
                         ori_ugc_type = 0
                     )
                 ),
-                clientVersion = ClientVersion.TIEBA_V12,
+                clientVersion = ClientVersion.TIEBA_V22,
                 needSToken = false
             )
         )
@@ -1615,15 +1618,38 @@ object MixedTiebaApiImpl : ITiebaApi {
         title: String,
         isHide: Int,
         isTitle: Int
-    ): Flow<AddThreadBean> =
-        RetrofitTiebaApi.MINI_TIEBA_API.addThreadFlow(
-            threadContent,
-            kw,
-            fid,
-            title,
-            isHide,
-            isTitle
-        )
+    ): Flow<AddThreadResponse> =
+        RetrofitTiebaApi.OFFICIAL_PROTOBUF_TIEBA_POST_API
+            .addThreadFlow(
+                buildProtobufRequestBody(
+                    AddThreadRequest(
+                        AddThreadRequestData(
+                            anonymous = "1",
+                            can_no_forum = "0",
+                            common = buildCommonRequest(
+                                clientVersion = ClientVersion.TIEBA_V12_POST,
+                                tbs = AccountUtil.getAccountInfo { this.tbs }
+                            ),
+                            content = threadContent,
+                            entrance_type = "0",
+                            fid = fid,
+                            is_hide = isHide.toString(),
+                            is_ntitle = isTitle.toString(),
+                            is_pictxt = "0",
+                            is_show_bless = 0,
+                            kw = kw,
+                            name_show = AccountUtil.getAccountInfo { this.nameShow }
+                                .orEmpty(),
+                            new_vcode = "1",
+                            show_custom_figure = 0,
+                            takephoto_num = "0",
+                            title = title,
+                            vcode_tag = "12",
+                        )
+                    ),
+                    clientVersion = ClientVersion.TIEBA_V12_POST
+                )
+            )
 
     override fun setUserBlackFlow(
         blackUid: Long,

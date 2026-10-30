@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 // 读取 application.properties
@@ -140,6 +141,12 @@ android {
 
             (this as BaseVariantOutputImpl).outputFileName = fileName
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
